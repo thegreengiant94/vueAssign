@@ -1,58 +1,133 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+   <div class="container">
+    <div class="holder">
+
+     <form @submit.prevent="addSkill">
+         <!--ONCE VALIDATION WORKS USE CODE THAT IS COMMENTED OUT AND DELETE BELOW INPUT TAG -->
+      <input type="text" placeholder="Enter a skill you have.."  v-model="skill">
+
+       <!--  <transition name="alert-in" enter-active-class="animated flipInX" leave-active-class="animated flipOutX">
+        <p class="alert" v-if="errors.has('skill')">{{ errors.first('skill') }}</p>
+      </transition> -->
+    </form>
+
+      <ul>
+          <transition-group name="list" enter-active-class="animated bounceInUp" leave-active-class="animated bounceOutDown">
+          <li v-for="(data, index) in skills" :key='index'>
+              {{data.skill}}
+               <i class="fa fa-minus-circle" v-on:click="remove(index)"></i>
+          </li>
+        </transition-group>
+      </ul>
+      <p>These are the skills that you possess.</p>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
-  props: {
-    msg: String
+    name: 'Skills',
+    data() {
+        return {
+            skill: '',
+            skills: [
+                {"skill": "Vue.js"},
+                {"skill": "Frontend Developer"}
+            ]
+        }
+    },
+    methods: {
+       addSkill() {
+            this.skills.push({skill: this.skill});
+            this.skill = '';
+        },
+        remove(id) {
+            this.skills.splice(id, 1);
+        }
+    }
   }
-}
 </script>
+
+<!-- ONCE VALIDATE WORKS USE AS NEW ADDSKILL
+    addSkill() {
+        this.$validator.validateAll().then((result) => {
+          if (result) {
+            this.skills.push({skill: this.skill});
+            this.skill = '';
+          } else {
+            console.log('Not valid');
+          }
+        })
+      }
+
+
+  -->
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+    @import "https://cdn.jsdelivr.net/npm/animate.css@3.5.1";
+    @import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
+.holder {
+    background: #fff;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  ul li {
+    padding: 20px;
+    font-size: 1.3em;
+    background-color: #E0EDF4;
+    border-left: 5px solid #3EB3F6;
+    margin-bottom: 2px;
+    color: #3E5252;
+  }
+
+  p {
+    text-align:center;
+    padding: 30px 0;
+    color: gray;
+  }
+
+  .container {
+    box-shadow: 0px 0px 40px lightgray;
+  }
+  input {
+    width: calc(100% - 40px);
+    border: 0;
+    padding: 20px;
+    font-size: 1.3em;
+    background-color: #323333;
+    color: #687F7F;
+  }
+    .alert {
+    background: #fdf2ce;
+    font-weight: bold;
+    display: inline-block;
+    padding: 5px;
+    margin-top: -20px;
+    }
+    .alert-in-enter-active {
+  animation: bounce-in .5s;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+.alert-in-leave-active {
+  animation: bounce-in .5s reverse;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.5);
+    }
+    100% {
+        transform: scale(1);
+    }
+    i {
+        float: right;
+    }
 }
 </style>
